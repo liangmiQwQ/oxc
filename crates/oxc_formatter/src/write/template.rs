@@ -766,15 +766,15 @@ fn write_embedded_template<'a>(
             // - Indented content (each line will be indented)
             // - Hard line break (newline before closing backtick)
             // - Closing backtick
-            write!(f, [
-                text("`"),
-                indent(&format_args![
+            write!(
+                f,
+                [
+                    text("`"),
+                    indent(&format_args![hard_line_break(), formatted_content]),
                     hard_line_break(),
-                    formatted_content
-                ]),
-                hard_line_break(),
-                text("`")
-            ])
+                    text("`")
+                ]
+            )
         }
         Err(_) => {
             // If formatting fails, fall back to default template formatting

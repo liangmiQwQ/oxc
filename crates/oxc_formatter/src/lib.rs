@@ -60,7 +60,10 @@ impl<'a> Formatter<'a> {
 
     /// Set the embedded formatter for handling embedded languages in templates
     #[must_use]
-    pub fn with_embedded_formatter(mut self, embedded_formatter: Option<EmbeddedFormatter>) -> Self {
+    pub fn with_embedded_formatter(
+        mut self,
+        embedded_formatter: Option<EmbeddedFormatter>,
+    ) -> Self {
         self.embedded_formatter = embedded_formatter;
         self
     }

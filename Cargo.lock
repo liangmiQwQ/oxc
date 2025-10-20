@@ -2816,9 +2816,6 @@ dependencies = [
  "oxc_parser 0.95.0",
  "oxc_span 0.95.0",
  "rayon",
- "serde",
- "serde_json",
- "tokio",
  "tracing-subscriber",
 ]
 

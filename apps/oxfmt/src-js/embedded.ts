@@ -50,4 +50,3 @@ export function formatEmbeddedCode(tagName: string, code: string): string {
     return code;
   }
 }
-

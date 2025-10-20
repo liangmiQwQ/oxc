@@ -14,6 +14,8 @@ pub struct FormatService {
     cwd: Box<Path>,
     output_options: OutputOptions,
     format_options: FormatOptions,
+    #[cfg(feature = "napi")]
+    external_formatter: Option<crate::prettier_plugins::ExternalFormatter>,
 }
 
 impl FormatService {
@@ -21,7 +23,23 @@ impl FormatService {
     where
         T: Into<Box<Path>>,
     {
-        Self { cwd: cwd.into(), output_options, format_options }
+        Self {
+            cwd: cwd.into(),
+            output_options,
+            format_options,
+            #[cfg(feature = "napi")]
+            external_formatter: None,
+        }
+    }
+
+    #[cfg(feature = "napi")]
+    #[must_use]
+    pub fn with_external_formatter(
+        mut self,
+        external_formatter: Option<crate::prettier_plugins::ExternalFormatter>,
+    ) -> Self {
+        self.external_formatter = external_formatter;
+        self
     }
 
     /// Process entries as they are received from the channel
@@ -73,7 +91,20 @@ impl FormatService {
             return;
         }
 
-        let code = Formatter::new(&allocator, self.format_options.clone()).build(&ret.program);
+        let embedded_formatter = {
+            #[cfg(feature = "napi")]
+            {
+                self.external_formatter.as_ref().map(|ef| ef.to_embedded_formatter())
+            }
+            #[cfg(not(feature = "napi"))]
+            {
+                None
+            }
+        };
+
+        let code = Formatter::new(&allocator, self.format_options.clone())
+            .with_embedded_formatter(embedded_formatter)
+            .build(&ret.program);
 
         let elapsed = start_time.elapsed();
         let is_changed = source_text != code;

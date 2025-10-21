@@ -49,7 +49,7 @@ impl ExternalFormatter {
 
 /// Wrap JS `formatEmbeddedCode` callback as a normal Rust function.
 ///
-/// The JS-side function is async, so we use a channel to capture the result.
+/// Uses a channel to capture the result from the JS callback.
 pub fn wrap_format_embedded(cb: JsFormatEmbeddedCb) -> EmbeddedFormatterCallback {
     let cb = Arc::new(cb);
     Arc::new(move |tag_name: &str, code: &str| {

@@ -1,11 +1,12 @@
 # Exit code
-0
+1
 
 # stdout
 ```
 Checking formatting...
+files/index.js (Xms)
 
-All matched files use the correct format.
+Format issues found in above 1 files. Run without `--check` to fix.
 Finished in Xms on 1 files using X threads.
 ```
 

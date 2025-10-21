@@ -47,11 +47,6 @@ napi-derive = { version = "3", optional = true }
 [build-dependencies]
 napi-build = "2.1.3"
 
-[features]
-default = ["napi"]
-napi = ["dep:napi", "dep:napi-derive"]
-allocator = ["mimalloc-safe"]
-
 [target.'cfg(not(any(target_os = "linux", target_os = "freebsd", target_arch = "arm", target_family = "wasm")))'.dependencies]
 mimalloc-safe = { workspace = true, optional = true, features = ["skip_collect_on_exit"] }
 
@@ -64,3 +59,8 @@ mimalloc-safe = { workspace = true, optional = true, features = ["skip_collect_o
 [dev-dependencies]
 insta = { workspace = true }
 lazy-regex = { workspace = true }
+
+[features]
+default = ["napi"]
+napi = ["dep:napi", "dep:napi-derive"]
+allocator = ["mimalloc-safe"]

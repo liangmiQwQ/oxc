@@ -101,12 +101,12 @@ mod napi_bindings {
     ///
     /// Returns `true` if formatting succeeded without errors, `false` otherwise.
     #[napi]
-    pub async fn format(args: Vec<String>, format_embedded_cb: JsFormatEmbeddedCb) -> bool {
-        format_impl(args, format_embedded_cb).report() == ExitCode::SUCCESS
+    pub fn format(args: Vec<String>, format_embedded_cb: JsFormatEmbeddedCb) -> bool {
+        format_impl(&args, format_embedded_cb).report() == ExitCode::SUCCESS
     }
 
     /// Run the formatter.
-    fn format_impl(args: Vec<String>, format_embedded_cb: JsFormatEmbeddedCb) -> CliRunResult {
+    fn format_impl(args: &[String], format_embedded_cb: JsFormatEmbeddedCb) -> CliRunResult {
         crate::init_tracing();
         crate::init_miette();
 

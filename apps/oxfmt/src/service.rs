@@ -98,7 +98,7 @@ impl FormatService {
         let embedded_formatter = {
             #[cfg(feature = "napi")]
             {
-                self.external_formatter.as_ref().map(|ef| ef.to_embedded_formatter())
+                self.external_formatter.as_ref().map(crate::prettier_plugins::ExternalFormatter::to_embedded_formatter)
             }
             #[cfg(not(feature = "napi"))]
             {

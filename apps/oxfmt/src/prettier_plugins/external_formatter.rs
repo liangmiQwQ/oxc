@@ -63,29 +63,27 @@ pub fn wrap_format_embedded(cb: JsFormatEmbeddedCb) -> EmbeddedFormatterCallback
 
         // Call the JS function with separate arguments
         let status = cb.call_with_return_value(
-            FnArgs::from((tag_name_str.clone(), code_str.clone())),
+            FnArgs::from((tag_name_str.clone(), code_str)),
             ThreadsafeFunctionCallMode::Blocking,
             move |result: Result<String, napi::Error>, _env| {
                 // Send the result through the channel
-                tx.send(result).ok();
+                let _ = tx.send(result);
                 Ok(())
             },
         );
 
         if status != napi::Status::Ok {
             return Err(format!(
-                "Failed to call JS formatter for tag '{}': {:?}",
-                tag_name_str, status
+                "Failed to call JS formatter for tag '{tag_name_str}': {status:?}"
             ));
         }
 
         // Wait for the result from the channel
         match rx.recv() {
             Ok(Ok(formatted)) => Ok(formatted),
-            Ok(Err(e)) => Err(format!("JS formatter failed for tag '{}': {}", tag_name_str, e)),
+            Ok(Err(e)) => Err(format!("JS formatter failed for tag '{tag_name_str}': {e}")),
             Err(_) => Err(format!(
-                "Failed to receive result from JS formatter for tag '{}'",
-                tag_name_str
+                "Failed to receive result from JS formatter for tag '{tag_name_str}'"
             )),
         }
     })

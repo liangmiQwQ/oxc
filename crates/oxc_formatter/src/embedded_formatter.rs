@@ -31,6 +31,9 @@ impl EmbeddedFormatter {
     /// # Returns
     /// * `Ok(String)` - The formatted code
     /// * `Err(String)` - An error message if formatting failed
+    ///
+    /// # Errors
+    /// Returns an error if the embedded formatter fails to format the code
     pub fn format(&self, tag_name: &str, code: &str) -> Result<String, String> {
         (self.callback)(tag_name, code)
     }

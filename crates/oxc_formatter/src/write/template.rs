@@ -744,47 +744,44 @@ fn write_embedded_template<'a>(
         .embedded_formatter()
         .expect("should_format_embedded_template should have been called first");
 
-    match embedded_formatter.format(&tag_name, template_content) {
-        Ok(formatted) => {
-            let trimmed = formatted.trim_end();
+    if let Ok(formatted) = embedded_formatter.format(&tag_name, template_content) {
+        let trimmed = formatted.trim_end();
 
-            // Split into lines and create format elements for each line
-            let allocator = f.context().allocator();
-            let lines: Vec<_> = trimmed.split('\n').collect();
+        // Split into lines and create format elements for each line
+        let allocator = f.context().allocator();
+        let lines: Vec<_> = trimmed.split('\n').collect();
 
-            // Build the formatted content with proper indentation
-            let formatted_content = format_with(|f| {
-                for (i, line) in lines.iter().enumerate() {
-                    if i > 0 {
-                        write!(f, [hard_line_break()])?;
-                    }
-                    let allocated_line = allocator.alloc_str(line);
-                    write!(f, [dynamic_text(allocated_line)])?;
+        // Build the formatted content with proper indentation
+        let formatted_content = format_with(|f| {
+            for (i, line) in lines.iter().enumerate() {
+                if i > 0 {
+                    write!(f, [hard_line_break()])?;
                 }
-                Ok(())
-            });
+                let allocated_line = allocator.alloc_str(line);
+                write!(f, [dynamic_text(allocated_line)])?;
+            }
+            Ok(())
+        });
 
-            // Format with proper template literal structure:
-            // - Opening backtick
-            // - Hard line break (newline after backtick)
-            // - Indented content (each line will be indented)
-            // - Hard line break (newline before closing backtick)
-            // - Closing backtick
-            write!(
-                f,
-                [
-                    text("`"),
-                    indent(&format_args![hard_line_break(), formatted_content]),
-                    hard_line_break(),
-                    text("`")
-                ]
-            )
-        }
-        Err(_) => {
-            // If formatting fails, fall back to default template formatting
-            let template = TemplateLike::TemplateLiteral(quasi);
-            write!(f, template)
-        }
+        // Format with proper template literal structure:
+        // - Opening backtick
+        // - Hard line break (newline after backtick)
+        // - Indented content (each line will be indented)
+        // - Hard line break (newline before closing backtick)
+        // - Closing backtick
+        write!(
+            f,
+            [
+                text("`"),
+                indent(&format_args!(hard_line_break(), formatted_content)),
+                hard_line_break(),
+                text("`")
+            ]
+        )
+    } else {
+        // If formatting fails, fall back to default template formatting
+        let template = TemplateLike::TemplateLiteral(quasi);
+        write!(f, template)
     }
 }
 

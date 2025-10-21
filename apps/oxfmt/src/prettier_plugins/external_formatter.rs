@@ -82,9 +82,9 @@ pub fn wrap_format_embedded(cb: JsFormatEmbeddedCb) -> EmbeddedFormatterCallback
         match rx.recv() {
             Ok(Ok(formatted)) => Ok(formatted),
             Ok(Err(e)) => Err(format!("JS formatter failed for tag '{tag_name_str}': {e}")),
-            Err(_) => Err(format!(
-                "Failed to receive result from JS formatter for tag '{tag_name_str}'"
-            )),
+            Err(_) => {
+                Err(format!("Failed to receive result from JS formatter for tag '{tag_name_str}'"))
+            }
         }
     })
 }

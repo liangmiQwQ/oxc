@@ -1,6 +1,7 @@
-#![expect(clippy::needless_pass_by_value)]
-
-use std::process::{ExitCode, Termination};
+use std::{
+    io::BufWriter,
+    process::{ExitCode, Termination},
+};
 
 use napi_derive::napi;
 
@@ -16,8 +17,10 @@ use crate::{
 /// 2. `format_embedded_cb`: Callback to format embedded code in templates
 ///
 /// Returns `true` if formatting succeeded without errors, `false` otherwise.
+#[expect(clippy::allow_attributes)]
+#[allow(clippy::trailing_empty_array, clippy::unused_async)] // https://github.com/napi-rs/napi-rs/issues/2758
 #[napi]
-pub fn format(args: Vec<String>, format_embedded_cb: JsFormatEmbeddedCb) -> bool {
+pub async fn format(args: Vec<String>, format_embedded_cb: JsFormatEmbeddedCb) -> bool {
     format_impl(&args, format_embedded_cb).report() == ExitCode::SUCCESS
 }
 
@@ -41,11 +44,13 @@ fn format_impl(args: &[String], format_embedded_cb: JsFormatEmbeddedCb) -> CliRu
         }
     };
 
+    command.handle_threads();
+
     // Create external formatter from JS callback
     let external_formatter = create_external_formatter(format_embedded_cb);
 
-    // Run the formatter with external formatter support
     // stdio is blocked by LineWriter, use a BufWriter to reduce syscalls.
-    let mut stdout = std::io::BufWriter::new(std::io::stdout());
+    // See `https://github.com/rust-lang/rust/issues/60673`.
+    let mut stdout = BufWriter::new(std::io::stdout());
     FormatRunner::new(command).with_external_formatter(Some(external_formatter)).run(&mut stdout)
 }

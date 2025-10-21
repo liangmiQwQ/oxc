@@ -744,10 +744,13 @@ fn write_embedded_template<'a>(
         .embedded_formatter()
         .expect("should_format_embedded_template should have been called first");
 
+    eprintln!("[DEBUG] write_embedded_template: tag={}, content={:?}", tag_name, &template_content[..template_content.len().min(50)]);
     match embedded_formatter.format(&tag_name, template_content) {
         Ok(formatted) => {
+            eprintln!("[DEBUG] Prettier returned: {:?}", &formatted[..formatted.len().min(50)]);
             // Remove trailing newline that Prettier adds
             let trimmed = formatted.trim_end();
+            eprintln!("[DEBUG] After trim_end: {:?}", &trimmed[..trimmed.len().min(50)]);
 
             // Split into lines and create format elements for each line
             let allocator = f.context().allocator();
@@ -781,7 +784,8 @@ fn write_embedded_template<'a>(
                 ]
             )
         }
-        Err(_) => {
+        Err(e) => {
+            eprintln!("[DEBUG] Embedded formatter returned error: {:?}", e);
             // If formatting fails, fall back to default template formatting
             let template = TemplateLike::TemplateLiteral(quasi);
             write!(f, template)

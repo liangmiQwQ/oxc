@@ -702,6 +702,11 @@ fn should_format_embedded_template<'a>(
     tagged_template: &AstNode<'a, TaggedTemplateExpression<'a>>,
     f: &Formatter<'_, 'a>,
 ) -> bool {
+    // Don't format if suppressed with prettier-ignore
+    if f.comments().is_suppressed(tagged_template.span().start) {
+        return false;
+    }
+
     // Only format if we have an embedded formatter
     if f.context().embedded_formatter().is_none() {
         return false;

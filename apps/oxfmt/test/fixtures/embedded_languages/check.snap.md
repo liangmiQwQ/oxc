@@ -6,7 +6,7 @@
 Checking formatting...
 
 All matched files use the correct format.
-Finished in Xms on 7 files using X threads.
+Finished in Xms on 1 files using X threads.
 ```
 
 # stderr

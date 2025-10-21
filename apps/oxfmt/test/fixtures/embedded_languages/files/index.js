@@ -1,20 +1,3 @@
-# Exit code
-0
-
-# stdout
-```
-files/index.js Xms (unchanged)
-
-Formatted 1 files.
-Finished in Xms on 1 files using X threads.
-```
-
-# stderr
-```
-```
-
-# Formatted Output
-```
 // ============================================================================
 // CSS - Tagged template literals with css and styled tags
 // ============================================================================
@@ -155,5 +138,3 @@ const sql = sql`
 
             SELECT * FROM users WHERE id = 1
 `;
-
-```

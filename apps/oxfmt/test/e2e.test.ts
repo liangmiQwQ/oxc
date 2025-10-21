@@ -38,7 +38,12 @@ async function testFixture(fixtureName: string, options?: TestOptions): Promise<
 
 describe('oxfmt NAPI - Embedded Language Formatting', () => {
   it('should format embedded languages (CSS, GraphQL, HTML, Markdown)', async () => {
-    await testFixture('embedded_languages');
+    await testFixture('embedded_languages', {
+      getExtraSnapshotData: async (dirPath) => {
+        const formattedCode = await fs.readFile(pathJoin(dirPath, 'files/index.js'), 'utf-8');
+        return { 'Formatted Output': formattedCode };
+      },
+    });
   });
 
   it('should work in check mode', async () => {

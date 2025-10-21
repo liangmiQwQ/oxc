@@ -1,4 +1,4 @@
-import prettier from '@prettier/sync';
+import prettier from 'prettier';
 
 // Map template tag names to Prettier parsers
 const TAG_TO_PARSER: Record<string, string> = {
@@ -19,13 +19,13 @@ const TAG_TO_PARSER: Record<string, string> = {
 };
 
 /**
- * Format embedded code using Prettier (synchronous).
+ * Format embedded code using Prettier (asynchronous).
  * Note: Called from Rust via NAPI ThreadsafeFunction with FnArgs
  * @param tagName - The template tag name (e.g., "css", "gql", "html")
  * @param code - The code to format
  * @returns Formatted code
  */
-export function formatEmbeddedCode(tagName: string, code: string): string {
+export async function formatEmbeddedCode(tagName: string, code: string): Promise<string> {
   const parser = TAG_TO_PARSER[tagName];
 
   if (!parser) {
@@ -34,7 +34,7 @@ export function formatEmbeddedCode(tagName: string, code: string): string {
   }
 
   try {
-    const formatted = prettier.format(code, {
+    const formatted = await prettier.format(code, {
       parser,
       printWidth: 80,
       tabWidth: 2,

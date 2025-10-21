@@ -3,7 +3,7 @@
 
 # stdout
 ```
-files/index.js Xms
+files/index.js Xms (unchanged)
 
 Formatted 1 files.
 Finished in Xms on 1 files using X threads.

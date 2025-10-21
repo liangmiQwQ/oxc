@@ -35,7 +35,6 @@
   ],
   "devDependencies": {
     "execa": "^9.6.0",
-    "prettier": "^3.4.2",
     "tsdown": "^0.15.5",
     "typescript": "catalog:",
     "vitest": "catalog:"
@@ -55,6 +54,6 @@
     ]
   },
   "dependencies": {
-    "@prettier/sync": "^0.6.1"
+    "prettier": "^3.4.2"
   }
 }

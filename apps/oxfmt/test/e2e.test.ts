@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import { join as pathJoin } from 'node:path';
 import { describe, it } from 'vitest';
-import { FIXTURES_DIR_PATH, PACKAGE_ROOT_PATH, testFixtureWithCommand } from './utils.js';
+import { PACKAGE_ROOT_PATH, testFixtureWithCommand } from './utils.js';
 
 const CLI_PATH = pathJoin(PACKAGE_ROOT_PATH, 'dist/cli.js');
 
@@ -45,8 +45,4 @@ describe('oxfmt NAPI - Embedded Language Formatting', () => {
       },
     });
   });
-
-  // TODO: Add test for stdin formatting when implemented
-  // Should test: echo "const x=1" | oxfmt --stdin-filepath file.js
-  // This would allow testing stdin formatting without needing temporary files
 });

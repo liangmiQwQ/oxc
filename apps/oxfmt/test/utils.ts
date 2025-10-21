@@ -9,8 +9,6 @@ export const PACKAGE_ROOT_PATH = pathJoin(import.meta.dirname, '..');
 export const FIXTURES_DIR_PATH = pathJoin(import.meta.dirname, 'fixtures');
 
 const REPO_ROOT_PATH = pathJoin(PACKAGE_ROOT_PATH, '../../');
-const ROOT_URL = new URL('../../../', import.meta.url).href;
-const FIXTURES_URL = new URL('./fixtures/', import.meta.url).href;
 
 // Options to pass to `testFixtureWithCommand`.
 interface TestFixtureOptions {
@@ -39,6 +37,8 @@ export async function testFixtureWithCommand(options: TestFixtureOptions): Promi
   const tempFilesDir = pathJoin(tempDir, 'files');
 
   try {
+    // TODO: use stdin instead of copy to tmp dir.
+
     // Copy fixture files to temp directory
     await fs.cp(sourceFilesDir, tempFilesDir, { recursive: true });
 

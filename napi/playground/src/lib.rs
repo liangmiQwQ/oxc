@@ -423,19 +423,22 @@ impl Oxc {
         }
 
         if let Some(tab_width) = options.tab_width
-            && let Ok(width) = IndentWidth::try_from(tab_width) {
-                format_options.indent_width = width;
-            }
+            && let Ok(width) = IndentWidth::try_from(tab_width)
+        {
+            format_options.indent_width = width;
+        }
 
         if let Some(ref end_of_line) = options.end_of_line
-            && let Ok(ending) = end_of_line.parse::<LineEnding>() {
-                format_options.line_ending = ending;
-            }
+            && let Ok(ending) = end_of_line.parse::<LineEnding>()
+        {
+            format_options.line_ending = ending;
+        }
 
         if let Some(print_width) = options.print_width
-            && let Ok(width) = LineWidth::try_from(print_width) {
-                format_options.line_width = width;
-            }
+            && let Ok(width) = LineWidth::try_from(print_width)
+        {
+            format_options.line_width = width;
+        }
 
         if let Some(single_quote) = options.single_quote {
             format_options.quote_style =
@@ -448,14 +451,16 @@ impl Oxc {
         }
 
         if let Some(ref quote_props) = options.quote_props
-            && let Ok(props) = quote_props.parse::<QuoteProperties>() {
-                format_options.quote_properties = props;
-            }
+            && let Ok(props) = quote_props.parse::<QuoteProperties>()
+        {
+            format_options.quote_properties = props;
+        }
 
         if let Some(ref trailing_comma) = options.trailing_comma
-            && let Ok(commas) = trailing_comma.parse::<TrailingCommas>() {
-                format_options.trailing_commas = commas;
-            }
+            && let Ok(commas) = trailing_comma.parse::<TrailingCommas>()
+        {
+            format_options.trailing_commas = commas;
+        }
 
         if let Some(semi) = options.semi {
             format_options.semicolons =
@@ -498,9 +503,10 @@ impl Oxc {
         }
 
         if let Some(ref position) = options.experimental_operator_position
-            && let Ok(op_position) = position.parse::<OperatorPosition>() {
-                format_options.experimental_operator_position = op_position;
-            }
+            && let Ok(op_position) = position.parse::<OperatorPosition>()
+        {
+            format_options.experimental_operator_position = op_position;
+        }
 
         if let Some(ref sort_imports_config) = options.experimental_sort_imports {
             let order = sort_imports_config

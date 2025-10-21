@@ -37,35 +37,11 @@ async function testFixture(fixtureName: string, options?: TestOptions): Promise<
 }
 
 describe('oxfmt NAPI - Embedded Language Formatting', () => {
-  it('should format CSS in tagged template literals', async () => {
-    await testFixture('embedded_css');
-  });
-
-  it('should format GraphQL in tagged template literals', async () => {
-    await testFixture('embedded_graphql');
-  });
-
-  it('should format HTML in tagged template literals', async () => {
-    await testFixture('embedded_html');
-  });
-
-  it('should format Markdown in tagged template literals', async () => {
-    await testFixture('embedded_markdown');
-  });
-
-  it('should format multiple embedded languages in one file', async () => {
-    await testFixture('mixed_embedded');
-  });
-
-  it('should handle files with no embedded languages', async () => {
-    await testFixture('no_embedded');
-  });
-
-  it('should handle unsupported template tags gracefully', async () => {
-    await testFixture('unsupported_tag');
+  it('should format embedded languages (CSS, GraphQL, HTML, Markdown)', async () => {
+    await testFixture('embedded_languages');
   });
 
   it('should work in check mode', async () => {
-    await testFixture('check_mode', { args: ['--check'] });
+    await testFixture('embedded_languages', { args: ['--check'], snapshotName: 'check' });
   });
 });

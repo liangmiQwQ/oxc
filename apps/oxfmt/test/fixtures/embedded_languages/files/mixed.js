@@ -18,6 +18,6 @@ const template = html`
 
 const docs = md`
   # Documentation
-  
+
   This is **important**.
 `;

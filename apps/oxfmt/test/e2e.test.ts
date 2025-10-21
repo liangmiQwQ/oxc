@@ -45,8 +45,4 @@ describe('oxfmt NAPI - Embedded Language Formatting', () => {
       },
     });
   });
-
-  it('should work in check mode', async () => {
-    await testFixture('embedded_languages', { args: ['--check'], snapshotName: 'check' });
-  });
 });

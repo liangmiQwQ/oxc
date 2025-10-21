@@ -37,6 +37,7 @@ async function testFixture(fixtureName: string, options?: TestOptions): Promise<
 }
 
 describe('oxfmt NAPI - Embedded Language Formatting', () => {
+  // oxlint-disable-next-line vitest/expect-expect -- Assertion is inside testFixtureWithCommand helper
   it('should format embedded languages (CSS, GraphQL, HTML, Markdown)', async () => {
     await testFixture('embedded_languages', {
       getExtraSnapshotData: async (dirPath) => {

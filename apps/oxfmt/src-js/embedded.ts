@@ -44,7 +44,7 @@ export function formatEmbeddedCode(tagName: string, code: string): string {
 
     // Remove trailing newline that Prettier adds
     return formatted.trimEnd();
-  } catch (error) {
+  } catch {
     // If Prettier fails to format, return original code
     return code;
   }

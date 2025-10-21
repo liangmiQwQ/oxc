@@ -1,3 +1,5 @@
+import fs from 'node:fs/promises';
+import os from 'node:os';
 import { join as pathJoin } from 'node:path';
 
 import { execa } from 'execa';
@@ -30,28 +32,41 @@ interface TestFixtureOptions {
  */
 export async function testFixtureWithCommand(options: TestFixtureOptions): Promise<void> {
   const fixtureDirPath = pathJoin(FIXTURES_DIR_PATH, options.fixtureName);
+  const sourceFilesDir = pathJoin(fixtureDirPath, 'files');
 
-  let { stdout, stderr, exitCode } = await execa(options.command, options.args, {
-    cwd: fixtureDirPath,
-    reject: false,
-  });
+  // Create a temporary directory to avoid modifying the original fixture files
+  const tempDir = await fs.mkdtemp(pathJoin(os.tmpdir(), 'oxfmt-test-'));
+  const tempFilesDir = pathJoin(tempDir, 'files');
 
-  const snapshotPath = pathJoin(fixtureDirPath, `${options.snapshotName}.snap.md`);
+  try {
+    // Copy fixture files to temp directory
+    await fs.cp(sourceFilesDir, tempFilesDir, { recursive: true });
 
-  stdout = normalizeStdout(stdout);
-  stderr = normalizeStdout(stderr);
-  let snapshot = `# Exit code\n${exitCode}\n\n` +
-    `# stdout\n\`\`\`\n${stdout}\`\`\`\n\n` +
-    `# stderr\n\`\`\`\n${stderr}\`\`\`\n`;
+    let { stdout, stderr, exitCode } = await execa(options.command, options.args, {
+      cwd: tempDir,
+      reject: false,
+    });
 
-  if (options.getExtraSnapshotData) {
-    const extraSnapshots = await options.getExtraSnapshotData(fixtureDirPath);
-    for (const [name, data] of Object.entries(extraSnapshots)) {
-      snapshot += `\n# ${name}\n\`\`\`\n${data}\n\`\`\`\n`;
+    const snapshotPath = pathJoin(fixtureDirPath, `${options.snapshotName}.snap.md`);
+
+    stdout = normalizeStdout(stdout);
+    stderr = normalizeStdout(stderr);
+    let snapshot = `# Exit code\n${exitCode}\n\n` +
+      `# stdout\n\`\`\`\n${stdout}\`\`\`\n\n` +
+      `# stderr\n\`\`\`\n${stderr}\`\`\`\n`;
+
+    if (options.getExtraSnapshotData) {
+      const extraSnapshots = await options.getExtraSnapshotData(tempDir);
+      for (const [name, data] of Object.entries(extraSnapshots)) {
+        snapshot += `\n# ${name}\n\`\`\`\n${data}\n\`\`\`\n`;
+      }
     }
-  }
 
-  await expect(snapshot).toMatchFileSnapshot(snapshotPath);
+    await expect(snapshot).toMatchFileSnapshot(snapshotPath);
+  } finally {
+    // Clean up temp directory
+    await fs.rm(tempDir, { recursive: true, force: true });
+  }
 }
 
 /**

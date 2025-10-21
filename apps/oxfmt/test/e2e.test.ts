@@ -45,4 +45,8 @@ describe('oxfmt NAPI - Embedded Language Formatting', () => {
       },
     });
   });
+
+  // TODO: Add test for stdin formatting when implemented
+  // Should test: echo "const x=1" | oxfmt --stdin-filepath file.js
+  // This would allow testing stdin formatting without needing temporary files
 });

@@ -42,6 +42,10 @@ impl FormatService {
         self
     }
 
+    // TODO: Support reading from stdin for formatting, similar to `prettier --stdin-filepath <path>`
+    // This would allow formatting code from stdin and optionally specifying the file path for correct
+    // syntax detection (e.g., `echo "const x=1" | oxfmt --stdin-filepath file.js`)
+
     /// Process entries as they are received from the channel
     #[expect(clippy::needless_pass_by_value)]
     pub fn run_streaming(

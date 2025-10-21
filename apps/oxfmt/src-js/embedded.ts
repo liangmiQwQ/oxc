@@ -46,7 +46,6 @@ export function formatEmbeddedCode(tagName: string, code: string): string {
     return formatted.trimEnd();
   } catch (error) {
     // If Prettier fails to format, return original code
-    console.error(`Failed to format ${tagName}:`, error);
     return code;
   }
 }

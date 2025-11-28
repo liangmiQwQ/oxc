@@ -299,6 +299,6 @@ suite('E2E Server Linter', () => {
     // enable it for other tests
     await workspace.getConfiguration('oxc').update('enable', true);
     await workspace.saveAll();
-    await sleep(5000);
+    await sleep(500);
   })
 });

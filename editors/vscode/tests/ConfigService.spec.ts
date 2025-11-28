@@ -50,6 +50,9 @@ suite('ConfigService', () => {
 
     testSingleFolderMode('returns undefined for unsafe server path', async () => {
       const service = new ConfigService();
+
+      strictEqual(conf.get<boolean>('enable'), true);
+
       await conf.update('path.server', '../unsafe/oxc_language_server');
       const unsafeServerPath = service.getUserServerBinPath();
 

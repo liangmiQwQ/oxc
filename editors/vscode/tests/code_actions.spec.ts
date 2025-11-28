@@ -43,7 +43,6 @@ suite('code actions', () => {
   // flaky test for multi workspace mode
   testSingleFolderMode('listed code actions', async () => {
     await loadFixture('debugger');
-    await sleep(5000)
     const fileUri = Uri.joinPath(fixturesWorkspaceUri(), 'fixtures', 'debugger.js');
     // await window.showTextDocument(fileUri); -- should also work without opening the file
 

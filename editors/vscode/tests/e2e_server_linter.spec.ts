@@ -283,7 +283,6 @@ suite('E2E Server Linter', () => {
     strictEqual(secondDiagnostics.length, 1);
   });
 
-
   testSingleFolderMode('changing oxc.enable will update the client status', async () => {
     await loadFixture('changing_enable');
 
@@ -300,6 +299,6 @@ suite('E2E Server Linter', () => {
     // enable it for other tests
     await workspace.getConfiguration('oxc').update('enable', true);
     await workspace.saveAll();
-    await sleep(500);
+    await sleep(5000);
   })
 });

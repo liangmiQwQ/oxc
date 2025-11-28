@@ -52,6 +52,7 @@ suite('ConfigService', () => {
       const service = new ConfigService();
 
       strictEqual(conf.get<boolean>('enable'), true);
+      strictEqual(conf.get<boolean>('enable'), false);
 
       await conf.update('path.server', '../unsafe/oxc_language_server');
       const unsafeServerPath = service.getUserServerBinPath();

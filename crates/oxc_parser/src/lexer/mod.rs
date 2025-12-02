@@ -209,6 +209,7 @@ impl<'a> Lexer<'a> {
 
     /// Read next token in file.
     /// Use `first_token` for first token, and this method for all further tokens.
+    #[inline]
     pub fn next_token(&mut self) -> Token {
         let kind = self.read_next_token();
         self.finish_next(kind)

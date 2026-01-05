@@ -1,14 +1,10 @@
-use memchr::{memmem::Finder, memmem::FinderRev};
-use oxc_span::VALID_EXTENSIONS;
-
 use crate::loader::JavaScriptSource;
+use memchr::{memmem::Finder, memmem::FinderRev};
 
 mod astro;
 mod svelte;
-mod vue;
 pub use astro::AstroPartialLoader;
 pub use svelte::SveltePartialLoader;
-pub use vue::VuePartialLoader;
 
 const SCRIPT_START: &str = "<script";
 const SCRIPT_END: &str = "</script>";
@@ -17,12 +13,7 @@ const COMMENT_END: &str = "-->";
 
 /// File extensions that can contain JS/TS code in certain parts, such as in `<script>` tags, and can
 /// be loaded using the [`PartialLoader`].
-pub const LINT_PARTIAL_LOADER_EXTENSIONS: &[&str] = &["vue", "astro", "svelte"];
-
-/// All valid JavaScript/TypeScript extensions, plus additional framework files that
-/// contain JavaScript/TypeScript code in them (e.g., Vue, Astro, Svelte, etc.).
-pub const LINTABLE_EXTENSIONS: &[&str] =
-    constcat::concat_slices!([&str]: VALID_EXTENSIONS, LINT_PARTIAL_LOADER_EXTENSIONS);
+pub const LINT_PARTIAL_LOADER_EXTENSIONS: &[&str] = &["astro", "svelte"];
 
 pub struct PartialLoader;
 
@@ -31,7 +22,6 @@ impl PartialLoader {
     /// Returns `None` if the special file does not have a js section.
     pub fn parse<'a>(ext: &str, source_text: &'a str) -> Option<Vec<JavaScriptSource<'a>>> {
         match ext {
-            "vue" => Some(VuePartialLoader::new(source_text).parse()),
             "astro" => Some(AstroPartialLoader::new(source_text).parse()),
             "svelte" => Some(SveltePartialLoader::new(source_text).parse()),
             _ => None,

@@ -123,11 +123,13 @@ oxc_napi = { version = "0.107.0", path = "crates/oxc_napi" } # NAPI utilities
 oxc_parser = { version = "0.107.0", path = "crates/oxc_parser", features = [
   "regular_expression",
 ] } # JS/TS parser
+
 oxc_parser_napi = { version = "0.107.0", path = "napi/parser" } # Node.js parser binding
 oxc_regular_expression = { version = "0.107.0", path = "crates/oxc_regular_expression" } # Regex parser
 oxc_semantic = { version = "0.107.0", path = "crates/oxc_semantic" } # Semantic analysis
 oxc_span = { version = "0.107.0", path = "crates/oxc_span" } # Source positions
 oxc_syntax = { version = "0.107.0", path = "crates/oxc_syntax" } # Syntax utilities
+oxc_vue_parser = { version = "0.107.0", path = "crates/oxc_vue_parser" } # Vue parser
 oxc_transform_napi = { version = "0.107.0", path = "napi/transform" } # Node.js transformer binding
 oxc_transformer = { version = "0.107.0", path = "crates/oxc_transformer" } # Code transformation
 oxc_transformer_plugins = { version = "0.107.0", path = "crates/oxc_transformer_plugins" } # Transformer plugins
@@ -245,6 +247,7 @@ sort-package-json = "0.0.7"
 oxc-toml = "0.14.1"
 unicode-width = "0.2"
 website_common = { path = "tasks/website_common" }
+vue-compiler-core = "0.1.0"
 
 [workspace.metadata.cargo-shear]
 ignored = ["oxc_transform_napi", "oxc_parser_napi", "oxc_minify_napi"]

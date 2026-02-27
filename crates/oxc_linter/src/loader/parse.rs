@@ -1,7 +1,7 @@
 use oxc_allocator::{Allocator, Vec as ArenaVec};
 use oxc_ast::ast::Program;
 use oxc_diagnostics::OxcDiagnostic;
-use oxc_parser::{ParseOptions, Parser, Token};
+use oxc_parser::{ParseOptions, Parser, Token, config::RuntimeParserConfig};
 use oxc_span::Span;
 use oxc_syntax::module_record::ModuleRecord;
 use vue_oxc_toolkit::VueOxcParser;
@@ -39,9 +39,11 @@ macro_rules! parse_options {
 pub fn parse_javascript_source<'a>(
     allocator: &'a Allocator,
     source: JavaScriptSource<'a>,
+    collect_tokens: bool,
 ) -> (Result<LinterParseResult<'a>, Vec<OxcDiagnostic>>, JavaScriptSource<'a>) {
     let ret = Parser::new(allocator, source.source_text, source.source_type)
         .with_options(parse_options!())
+        .with_config(RuntimeParserConfig::new(collect_tokens))
         .parse();
 
     if !ret.errors.is_empty() {

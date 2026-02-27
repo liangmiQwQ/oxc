@@ -964,12 +964,14 @@ impl Runtime {
         allocator: &'a Allocator,
         mut out_sections: Option<&mut SectionContents<'a>>,
     ) -> SmallVec<[Result<ResolvedModuleRecord, Vec<OxcDiagnostic>>; 1]> {
-        let section_sources = PartialLoader::parse(allocator, ext, source_text)
+        let collect_tokens = self.linter.has_external_linter();
+        let section_sources = PartialLoader::parse(allocator, ext, source_text, collect_tokens)
             .or_else(|| TransformLoader::parse(allocator, ext, source_text))
             .unwrap_or_else(|| {
                 vec![parse_javascript_source(
                     allocator,
                     JavaScriptSource::partial(source_text, source_type, 0),
+                    collect_tokens,
                 )]
             });
 
@@ -977,7 +979,13 @@ impl Runtime {
             [Result<ResolvedModuleRecord, Vec<OxcDiagnostic>>; 1],
         >::with_capacity(section_sources.len());
         for (result, section_source) in section_sources {
-            match self.process_source_section(path, allocator, check_syntax_errors, result) {
+            match self.process_source_section(
+                path,
+                allocator,
+                check_syntax_errors,
+                collect_tokens,
+                result,
+            ) {
                 Ok((record, semantic, parser_tokens)) => {
                     section_module_records.push(Ok(record));
                     if let Some(sections) = &mut out_sections {
@@ -1023,10 +1031,10 @@ impl Runtime {
         path: &Path,
         allocator: &'a Allocator,
         check_syntax_errors: bool,
+        collect_tokens: bool,
         parse_result: Result<LinterParseResult<'a>, Vec<OxcDiagnostic>>,
     ) -> Result<(ResolvedModuleRecord, Semantic<'a>, Option<ArenaVec<'a, Token>>), Vec<OxcDiagnostic>>
     {
-        let collect_tokens = self.linter.has_external_linter();
         let parse_result = parse_result?;
 
         let semantic_ret = SemanticBuilder::new()
@@ -1062,6 +1070,7 @@ impl Runtime {
                 })
                 .collect();
         }
+
         let parser_tokens = collect_tokens.then_some(parse_result.tokens);
         Ok((
             ResolvedModuleRecord { module_record, resolved_module_requests },

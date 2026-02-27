@@ -1,7 +1,7 @@
-use oxc_allocator::Allocator;
+use oxc_allocator::{Allocator, Vec as ArenaVec};
 use oxc_ast::ast::Program;
 use oxc_diagnostics::OxcDiagnostic;
-use oxc_parser::{ParseOptions, Parser};
+use oxc_parser::{ParseOptions, Parser, Token};
 use oxc_span::Span;
 use oxc_syntax::module_record::ModuleRecord;
 use vue_oxc_toolkit::VueOxcParser;
@@ -12,6 +12,7 @@ pub struct LinterParseResult<'a> {
     pub program: Program<'a>,
     pub irregular_whitespaces: Box<[Span]>,
     pub module_record: ModuleRecord<'a>,
+    pub tokens: ArenaVec<'a, Token>,
 }
 
 impl<'a> LinterParseResult<'a> {
@@ -19,8 +20,9 @@ impl<'a> LinterParseResult<'a> {
         program: Program<'a>,
         irregular_whitespaces: Box<[Span]>,
         module_record: ModuleRecord<'a>,
+        tokens: ArenaVec<'a, Token>,
     ) -> Self {
-        Self { program, irregular_whitespaces, module_record }
+        Self { program, irregular_whitespaces, module_record, tokens }
     }
 }
 
@@ -46,7 +48,15 @@ pub fn parse_javascript_source<'a>(
         return (Err(if ret.is_flow_language { vec![] } else { ret.errors }), source);
     }
 
-    (Ok(LinterParseResult::new(ret.program, ret.irregular_whitespaces, ret.module_record)), source)
+    (
+        Ok(LinterParseResult::new(
+            ret.program,
+            ret.irregular_whitespaces,
+            ret.module_record,
+            ret.tokens,
+        )),
+        source,
+    )
 }
 
 pub fn parse_vue_source<'a>(
@@ -61,7 +71,12 @@ pub fn parse_vue_source<'a>(
     }
 
     vec![(
-        Ok(LinterParseResult::new(ret.program, ret.irregular_whitespaces, ret.module_record)),
+        Ok(LinterParseResult::new(
+            ret.program,
+            ret.irregular_whitespaces,
+            ret.module_record,
+            ArenaVec::new_in(allocator),
+        )),
         source,
     )]
 }

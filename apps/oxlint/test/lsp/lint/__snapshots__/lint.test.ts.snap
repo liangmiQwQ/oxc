@@ -159,6 +159,17 @@ help: Remove the debugger statement
 --------------------"
 `;
 
+exports[`LSP linting > config options > should not write to stdout in JS side 1`] = `
+"--- FILE -----------
+config-stdout/test.js
+--- Diagnostics ---------
+> 1 | debugger;
+    | ^^^^^^^^^ Warning: \`debugger\` statement is not allowed
+help: Remove the debugger statement
+  2 |
+--------------------"
+`;
+
 exports[`LSP linting > initializationOptions > should use custom config path from configPath 1`] = `
 "--- FILE -----------
 custom-config-path/test.ts

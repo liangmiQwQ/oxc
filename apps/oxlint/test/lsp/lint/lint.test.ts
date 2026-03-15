@@ -41,6 +41,12 @@ describe("LSP linting", () => {
         ),
       ).toMatchSnapshot();
     });
+
+    it("should not write to stdout in JS side", async () => {
+      expect(
+        await lintFixture(FIXTURES_DIR, "config-ts-config-stdout/test.js", "javascript"),
+      ).toMatchSnapshot();
+    });
   });
 
   describe("initializationOptions", () => {

@@ -174,7 +174,7 @@ if (!process.stdout.isTTY) {
   process.stdout._handle?.setBlocking?.(true);
 }
 
-// Redirect all JS-side stdout to stderr to prevent it from corrupting LSP stdio (JSON-RPC)
+// Redirect all JS side stdout to stderr to prevent it from corrupting LSP stdio (JSON-RPC)
 // Do not set it to `() => {}` so that messages can still be displayed in the terminal and editor output
 // The Rust LSP server writes directly to stdout, so this won't break LSP
 process.stdout.write = process.stderr.write.bind(process.stderr);
